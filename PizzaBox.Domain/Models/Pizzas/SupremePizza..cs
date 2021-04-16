@@ -2,11 +2,12 @@ using PizzaBox.Domain.Abstracts;
 
 namespace PizzaBox.Domain.Models.Pizzas
 {
-    public class CustomPizza : APizza
+    public class SupremePizza : APizza
     {
-        public CustomPizza()
+        public SupremePizza()
         {
-            Name = "Custom Order Pizza";
+            Name = "Supreme Pizza";
+
         }
     }
 }

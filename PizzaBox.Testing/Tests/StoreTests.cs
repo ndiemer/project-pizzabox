@@ -1,4 +1,4 @@
-using PizzaBox.Domain.Models;
+using PizzaBox.Domain.Models.Stores;
 using Xunit;
 
 namespace PizzaBox.Testing.Tests

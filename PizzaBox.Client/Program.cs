@@ -1,28 +1,22 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
 using PizzaBox.Domain.Abstracts;
 using PizzaBox.Domain.Models;
-using PizzaBox.Domain.Models.Stores;
-using PizzaBox.Domain.Models.Pizzas;
+using PizzaBox.Client.Singletons;
 
 
 namespace PizzaBox.Client
 {
     public class Program
     {
-        private static readonly List<AStore> _stores = new List<AStore>()
-        {
-            new ChicagoStore(),
-            new NewYorkStore()
-        };
-        private static readonly List<APizza> _pizzas = new List<APizza>()
-        {
-            new CustomPizza(),
-            new MeatPizza(),
-            new SupremePizza(),
-
-        };
-
+        /// <summary>
+        /// 
+        /// </summary>
+        private static readonly StoreSingleton _storeSingleton = StoreSingleton.Instance;
+        private static readonly PizzaSingleton _pizzaSingleton = PizzaSingleton.Instance;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         private static void Main()
         {
             Run();
@@ -36,14 +30,20 @@ namespace PizzaBox.Client
             PrintStoreList();
 
             order.Customer = new Customer();
+            order.Store = SelectStore();
+            order.Pizza = SelectPizza();
+        }
 
+        private static void PrintOrder(APizza pizza)
+        {
+            Console.WriteLine($"Your order is: {pizza.Name}");
         }
 
         private static void PrintStoreList()
         {
             var index = 0;
 
-            foreach ( var item in _stores)
+            foreach (var item in _storeSingleton.Stores)
             {
                 Console.WriteLine($"{++index} - {item}");
             }
@@ -53,9 +53,9 @@ namespace PizzaBox.Client
         {
             var index = 0;
 
-            foreach ( var item in _pizzas)
+            foreach (var item in _pizzaSingleton.Pizzas)
             {
-                Console.WriteLine($"{++index} - {item}");
+                Console.WriteLine($"{++index} - {item.Name}");
             }
         }
 
@@ -65,7 +65,17 @@ namespace PizzaBox.Client
 
             PrintPizzaList();
 
-            return _stores[input - 1];
+            return _storeSingleton.Stores[input - 1];
+        }
+
+        private static APizza SelectPizza()
+        {
+            var input = int.Parse(Console.ReadLine());
+            var pizza = _pizzaSingleton.Pizzas[input - 1];
+
+            PrintOrder(pizza);
+
+            return pizza;
         }
     }
 }
