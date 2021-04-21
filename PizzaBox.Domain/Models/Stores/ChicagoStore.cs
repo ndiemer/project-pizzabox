@@ -2,12 +2,12 @@ using PizzaBox.Domain.Abstracts;
 
 namespace PizzaBox.Domain.Models.Stores
 {
-    public class ChicagoStore : AStore
+  public class ChicagoStore : AStore
+  {
+    public ChicagoStore()
     {
-        public ChicagoStore()
-        {
-            Name = "ChicagoStore";
-        }
-
+      Name = "ChicagoStore";
     }
+
+  }
 }

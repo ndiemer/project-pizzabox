@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using PizzaBox.Domain.Abstracts;
 
 namespace PizzaBox.Domain.Models
 {
-    public class Size : AComponent
-    {
-        
-    }
+  public class Size : AComponent
+  {
+    List<APizza> Pizzas { get; set; }
+  }
 }
