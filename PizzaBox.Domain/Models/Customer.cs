@@ -9,7 +9,6 @@ namespace PizzaBox.Domain.Models
   public class Customer : AModel
   {
     public string Name { get; set; }
-    //public List<Order> OrderHistory { get; set; }
 
     public override string ToString()
     {

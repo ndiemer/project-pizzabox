@@ -5,6 +5,6 @@ namespace PizzaBox.Domain.Models
 {
   public class Topping : AComponent
   {
-    public List<APizza> Pizzas { get; set; }
+    public IEnumerable<APizza> Pizzas { get; set; }
   }
 }

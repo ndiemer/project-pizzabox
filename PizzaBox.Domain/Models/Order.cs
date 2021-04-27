@@ -7,9 +7,11 @@ namespace PizzaBox.Domain.Models
   public class Order : AModel
   {
     public Customer Customer { get; set; }
+    public long CustomerEntityId { get; set; }
     public AStore Store { get; set; }
+    public long StoreEntityId { get; set; }
     public APizza Pizza { get; set; }
-    // public List<APizza> TotalPizzas { get; set; }
+    public long PizzaEntityId { get; set; }
     public decimal TotalCost
     {
       get

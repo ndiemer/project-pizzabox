@@ -15,13 +15,15 @@ namespace PizzaBox.Domain.Abstracts
   public abstract class APizza : AModel
   {
     public Crust Crust { get; set; }
+    // public long CrustEntityId { get; set; }
     public Size Size { get; set; }
+    // public long SizeEntityId { get; set; }
     public List<Topping> Toppings { get; set; }
 
     /// <summary>
     /// 
     /// </summary>
-    public APizza()
+    protected APizza()
     {
       Factory();
     }
@@ -29,7 +31,7 @@ namespace PizzaBox.Domain.Abstracts
     /// <summary>
     /// 
     /// </summary>
-    protected virtual void Factory()
+    public virtual void Factory()
     {
       AddCrust();
       AddSize();
@@ -39,17 +41,17 @@ namespace PizzaBox.Domain.Abstracts
     /// <summary>
     /// 
     /// </summary>
-    protected virtual void AddCrust() { }
+    public abstract void AddCrust(Crust crust = null);
 
     /// <summary>
     /// 
     /// </summary>
-    protected virtual void AddSize() { }
+    public abstract void AddSize(Size size = null);
 
     /// <summary>
     /// 
     /// </summary>
-    protected abstract void AddToppings();
+    public abstract void AddToppings(params Topping[] toppings);
 
     /// <summary>
     /// 

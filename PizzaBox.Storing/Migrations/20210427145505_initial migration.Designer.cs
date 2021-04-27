@@ -10,8 +10,8 @@ using PizzaBox.Storing;
 namespace PizzaBox.Storing.Migrations
 {
     [DbContext(typeof(PizzaBoxContext))]
-    [Migration("20210421163351_update customer names")]
-    partial class updatecustomernames
+    [Migration("20210427145505_initial migration")]
+    partial class initialmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,21 @@ namespace PizzaBox.Storing.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("APizzaTopping", b =>
+                {
+                    b.Property<long>("PizzasEntityId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ToppingsEntityId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("PizzasEntityId", "ToppingsEntityId");
+
+                    b.HasIndex("ToppingsEntityId");
+
+                    b.ToTable("APizzaTopping");
+                });
 
             modelBuilder.Entity("PizzaBox.Domain.Abstracts.APizza", b =>
                 {
@@ -31,25 +46,30 @@ namespace PizzaBox.Storing.Migrations
                     b.Property<long?>("CrustEntityId")
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("CrustEntityId1")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("OrderEntityId")
+                    b.Property<long?>("SizeEntityId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("SizeEntityId")
+                    b.Property<long?>("SizeEntityId1")
                         .HasColumnType("bigint");
 
                     b.HasKey("EntityId");
 
                     b.HasIndex("CrustEntityId");
 
-                    b.HasIndex("OrderEntityId");
+                    b.HasIndex("CrustEntityId1");
 
                     b.HasIndex("SizeEntityId");
 
-                    b.ToTable("APizza");
+                    b.HasIndex("SizeEntityId1");
+
+                    b.ToTable("Pizzas");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("APizza");
                 });
@@ -90,7 +110,7 @@ namespace PizzaBox.Storing.Migrations
 
                     b.HasKey("EntityId");
 
-                    b.ToTable("Crust");
+                    b.ToTable("Crusts");
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Models.Customer", b =>
@@ -122,13 +142,13 @@ namespace PizzaBox.Storing.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("CustomerEntityId")
+                    b.Property<long>("CustomerEntityId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("PizzaEntityId")
+                    b.Property<long>("PizzaEntityId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("StoreEntityId")
+                    b.Property<long>("StoreEntityId")
                         .HasColumnType("bigint");
 
                     b.HasKey("EntityId");
@@ -139,7 +159,7 @@ namespace PizzaBox.Storing.Migrations
 
                     b.HasIndex("StoreEntityId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Models.Size", b =>
@@ -157,7 +177,7 @@ namespace PizzaBox.Storing.Migrations
 
                     b.HasKey("EntityId");
 
-                    b.ToTable("Size");
+                    b.ToTable("Sizes");
                 });
 
             modelBuilder.Entity("PizzaBox.Domain.Models.Topping", b =>
@@ -167,9 +187,6 @@ namespace PizzaBox.Storing.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long?>("APizzaEntityId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -177,8 +194,6 @@ namespace PizzaBox.Storing.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("EntityId");
-
-                    b.HasIndex("APizzaEntityId");
 
                     b.ToTable("Topping");
                 });
@@ -232,19 +247,38 @@ namespace PizzaBox.Storing.Migrations
                         });
                 });
 
+            modelBuilder.Entity("APizzaTopping", b =>
+                {
+                    b.HasOne("PizzaBox.Domain.Abstracts.APizza", null)
+                        .WithMany()
+                        .HasForeignKey("PizzasEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PizzaBox.Domain.Models.Topping", null)
+                        .WithMany()
+                        .HasForeignKey("ToppingsEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PizzaBox.Domain.Abstracts.APizza", b =>
                 {
                     b.HasOne("PizzaBox.Domain.Models.Crust", "Crust")
-                        .WithMany()
+                        .WithMany("Pizzas")
                         .HasForeignKey("CrustEntityId");
 
-                    b.HasOne("PizzaBox.Domain.Models.Order", null)
-                        .WithMany("TotalPizzas")
-                        .HasForeignKey("OrderEntityId");
+                    b.HasOne("PizzaBox.Domain.Models.Crust", null)
+                        .WithMany()
+                        .HasForeignKey("CrustEntityId1");
 
                     b.HasOne("PizzaBox.Domain.Models.Size", "Size")
-                        .WithMany()
+                        .WithMany("Pizzas")
                         .HasForeignKey("SizeEntityId");
+
+                    b.HasOne("PizzaBox.Domain.Models.Size", null)
+                        .WithMany()
+                        .HasForeignKey("SizeEntityId1");
 
                     b.Navigation("Crust");
 
@@ -255,15 +289,21 @@ namespace PizzaBox.Storing.Migrations
                 {
                     b.HasOne("PizzaBox.Domain.Models.Customer", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerEntityId");
+                        .HasForeignKey("CustomerEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PizzaBox.Domain.Abstracts.APizza", "Pizza")
                         .WithMany()
-                        .HasForeignKey("PizzaEntityId");
+                        .HasForeignKey("PizzaEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("PizzaBox.Domain.Abstracts.AStore", "Store")
                         .WithMany("Orders")
-                        .HasForeignKey("StoreEntityId");
+                        .HasForeignKey("StoreEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Customer");
 
@@ -272,26 +312,19 @@ namespace PizzaBox.Storing.Migrations
                     b.Navigation("Store");
                 });
 
-            modelBuilder.Entity("PizzaBox.Domain.Models.Topping", b =>
-                {
-                    b.HasOne("PizzaBox.Domain.Abstracts.APizza", null)
-                        .WithMany("Toppings")
-                        .HasForeignKey("APizzaEntityId");
-                });
-
-            modelBuilder.Entity("PizzaBox.Domain.Abstracts.APizza", b =>
-                {
-                    b.Navigation("Toppings");
-                });
-
             modelBuilder.Entity("PizzaBox.Domain.Abstracts.AStore", b =>
                 {
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("PizzaBox.Domain.Models.Order", b =>
+            modelBuilder.Entity("PizzaBox.Domain.Models.Crust", b =>
                 {
-                    b.Navigation("TotalPizzas");
+                    b.Navigation("Pizzas");
+                });
+
+            modelBuilder.Entity("PizzaBox.Domain.Models.Size", b =>
+                {
+                    b.Navigation("Pizzas");
                 });
 #pragma warning restore 612, 618
         }
