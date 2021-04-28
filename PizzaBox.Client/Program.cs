@@ -39,15 +39,18 @@ namespace PizzaBox.Client
       order.Store = SelectStore();
       order.Pizza = SelectPizza();
 
+      PrintOrder(order);
+
       _orderRepository.Create(order);
     }
 
     /// <summary>
     /// 
     /// </summary>
-    private static void PrintOrder(APizza pizza)
+    private static void PrintOrder(Order order)
     {
-      Console.WriteLine($"Your order placed at is: {pizza}");
+      Console.WriteLine($"Your order placed at {order.Store} is: {order.Pizza}");
+      Console.WriteLine($"Your total on this order is: {order.TotalCost}");
     }
 
     /// <summary>
@@ -149,7 +152,6 @@ namespace PizzaBox.Client
 
       var pizza = _pizzaSingleton.Pizzas[input - 1];
 
-      PrintOrder(pizza);
 
       return pizza;
     }
