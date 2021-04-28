@@ -50,7 +50,7 @@ namespace PizzaBox.Client
     private static void PrintOrder(Order order)
     {
       Console.WriteLine($"\nYour order placed at {order.Store} is: {order.Pizza}");
-      Console.WriteLine($"Your total on this order is: {order.TotalCost}");
+      Console.WriteLine($"Your total on this order is: ${order.TotalCost}");
     }
 
     /// <summary>
