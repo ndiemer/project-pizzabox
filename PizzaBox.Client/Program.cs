@@ -49,7 +49,7 @@ namespace PizzaBox.Client
     /// </summary>
     private static void PrintOrder(Order order)
     {
-      Console.WriteLine($"Your order placed at {order.Store} is: {order.Pizza}");
+      Console.WriteLine($"\nYour order placed at {order.Store} is: {order.Pizza}");
       Console.WriteLine($"Your total on this order is: {order.TotalCost}");
     }
 
@@ -58,6 +58,7 @@ namespace PizzaBox.Client
     /// </summary>
     private static void PrintStoreList()
     {
+      Console.WriteLine("\nWhat store are you ordering from?");
       var index = 0;
 
       foreach (var item in _storeSingleton.Stores)
@@ -72,6 +73,8 @@ namespace PizzaBox.Client
     private static void PrintPizzaList()
     {
       var index = 0;
+
+      Console.WriteLine("\nWhat pizza would you like to order?");
 
       foreach (var item in _pizzaSingleton.Pizzas)
       {
